@@ -1,0 +1,19 @@
+module "eks-module" {
+  source                 = "./modules"
+  region                 = "eu-west-2"
+  vpc_cidr_block         = "10.0.0.0/16"
+  vpc_dns_hostnames      = true
+  vpc_dns_support        = true
+  public_sub1_cidr_bock  = "10.0.1.0/24"
+  public_sub2_cidr_bock  = "10.0.2.0/24"
+  private_sub1_cidr_bock = "10.0.3.0/24"
+  private_sub2_cidr_bock = "10.0.4.0/24"
+  dest_cidr_bock         = "0.0.0.0/0"
+  availability_zone_1    = "eu-west-2a"
+  availability_zone_2    = "eu-west-2b"
+  eks_version            = "1.27"
+  ami_type               = "AL2_x86_64"
+  cluster_name           = "ibt-k8s-cluster"
+  capacity_type          = "ON_DEMAND"
+  node_group_name        = "eks_node"
+}
