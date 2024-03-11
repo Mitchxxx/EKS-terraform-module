@@ -1,0 +1,38 @@
+esJavaOpts: "-Xmx128m -Xms128m"
+
+# resources:
+#   requests:
+#     cpu: "400m"
+#     memory: "3Gi"
+#   limits:
+#     cpu: "4000m"
+#     memory: "5Gi"
+
+volumeClaimTemplate:
+  accessModes: [ "ReadWriteOnce" ]
+  storageClassName: "local-storage"
+  resources:
+    requests:
+      storage: 20Gi
+
+
+extraInitContainers:
+  - name: init-volume-permission
+    image: busybox
+    command: ['chown', '-R', '1000:1000', '/usr/share/elasticsearch/']
+    volumeMounts:
+    - mountPath: /usr/share/elasticsearch/data
+      name: elasticsearch-master
+    securityContext:
+      privileged: true
+      runAsUser: 0
+
+readinessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 200
+  periodSeconds: 10
+  successThreshold: 3
+  timeoutSeconds: 5
+  
+# https://www.elastic.co/guide/en/elasticsearch/reference/current/cluster-health.html#request-params wait_for_status 
+clusterHealthCheckParams: 'wait_for_status=yellow&timeout=20s'
